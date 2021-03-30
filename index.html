@@ -99,7 +99,8 @@
         return L.circleMarker(latlng);
     },
     filter: function (feature) {
-        if (feature.properties["Tuition_Public\/Private"]) {
+        var school = feature.properties["Tuition_Public\/Private"]
+        if (school = "Public") {           
             return feature;
         }
     },
@@ -126,7 +127,8 @@ var privateLayer = L.geoJson(cost, {
         return L.circleMarker(latlng);
     },
     filter: function (feature) {
-        if (feature.properties["Tuition_Public\/Private"]) {
+        var school = feature.properties["Tuition_Public\/Private"]
+        if (school = "Private") {
             return feature;
         }
     },
