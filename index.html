@@ -92,13 +92,14 @@
       subdomains: 'abcd',
       maxZoom: 19
     }).addTo(map);
+//------------------------------------------------------------------------------------------;
 
-    var schoolLayer = L.geoJson(programs, {
+    var dataLayer = L.geoJson(cost, {
     pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng);
     },
     filter: function (feature) {
-        if (feature.properties.ORGANIZATI) {
+        if (feature.properties["Parent_Ins"]) {
             return feature;
         }
     },
@@ -112,7 +113,7 @@
         }
     },
     onEachFeature : function(feature,layer) {
-	var popup = `<p><b>${feature.properties.ORGANIZATI}</b></p>`;
+	var popup = `<p><b>${feature.properties["Parent_Ins"]}</b></p>`;
 layer.bindTooltip(popup);
 }
 }).addTo(map);
@@ -139,77 +140,8 @@ map.on('click', function (e) {
         }
     });
 });
-////////////////////////////////////////;
-var foodLayer = L.geoJson(stores, {
-    pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng);
-    },
-    filter: function (feature) {
-        if (feature.properties['STORE_NAME']) {
-            return feature;
-        }
-    },
-    style: function (feature) {
-        return {
-            color: '#ffa500',
-            fillColor: '#ffa500',
-            weight: 1,
-            fillOpacity: 1,
-            radius: 10
-        }
-    },
-    onEachFeature : function(feature,layer) {
-	var popup = `<p><b>${feature.properties['STORE_NAME']}</b></p>`;
-layer.bindTooltip(popup);
-}
-}).addTo(map);
 
-map.on('click', function (e) {
-    console.log(e.latlng) 
-    foodLayer.eachLayer(function (layer) {
-        console.log(layer.getLatLng()); 
-    });
-});
-
-map.on('click', function (e) {
-    foodLayer.eachLayer(function (layer) {
-        var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; 
-
-        if (distance > 1) {
-            layer.setStyle({
-                fillOpacity: 0.1
-            });
-        } else {
-            layer.setStyle({
-                fillOpacity: 1
-            });
-        }
-    });
-});
-//////////////////////////////////////;
-var fireLayer = L.geoJson(stations, {
-    pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng);
-    },
-    filter: function (feature) {
-        if (feature.properties['STATION_NU']) {
-            return feature;
-        }
-    },
-    style: function (feature) {
-        return {
-            color: '#FF0000',
-            fillColor: '#FF0000',
-            weight: 1,
-            fillOpacity: 1,
-            radius: 10
-        }
-    },
-    onEachFeature : function(feature,layer) {
-	var popup = `<p><b>${feature.properties['STATION_NU']}</b></p>`;
-layer.bindTooltip(popup);
-}
-}).addTo(map);
+//--------------------------------------------------------------------------------------------;
 
 map.on('click', function (e) {
     console.log(e.latlng) 
@@ -237,8 +169,8 @@ map.on('click', function (e) {
 
 
 var sourcesLayers = {
- "<b style='color:#ffa500'>Stores</b>": foodLayer,
- "<b style='color:#FF0000'>Stations</b>": fireLayer,
+ "<b style='color:#ffa500'>Out-of-State</b>": foodLayer,
+ "<b style='color:#FF0000'>In-State</b>": fireLayer,
  "<b style='color:#00FF00; text-shadow: 0px 0px 1px #333;'>Programs</b>": schoolLayer
 }
 

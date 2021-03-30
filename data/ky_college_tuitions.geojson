@@ -1,4 +1,4 @@
-{
+var cost = {
 "type": "FeatureCollection",
 "name": "ky_college_tuitions",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
