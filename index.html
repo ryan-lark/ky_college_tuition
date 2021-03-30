@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+  <meta charset=utf-8 />
+  <title>KY Tuition</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <!-- Is the is the latest version of Leaflet? -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: rgb(43, 43, 43);
+      font-family: "Lato", sans-serif;
+      font-size: 100%;
+      font-weight: 300;
+      color: rgb(172, 172, 172);
+    }
+
+    header,
+    footer,
+    section {
+      padding: 6px 10%;
+      margin: 0 auto;
+      width: 80%
+    }
+
+    h1 {
+      display: inline-block;
+      margin-right: 20px;
+      color: rgb(190, 190, 190);
+      font-size: 3.5em;
+      font-weight: 700;
+    }
+
+    h2 {
+      display: inline-block;
+      color: rgba(255, 200, 0, 0.8);
+      letter-spacing: 0.05em;
+      margin-top: 0px;
+      font-weight: 300;
+      text-transform: uppercase;
+      border-bottom: 1px dotted rgba(255, 200, 0, 0.5);
+      ;
+    }
+
+    #map {
+      width: 80%;
+      height: 540px;
+      margin: 10px auto;
+    }
+
+    p {
+      font-size: 1em;
+      color: rgba(170, 170, 170);
+      ;
+      font-weight: 300;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Kentucky College Tuition</h1>
+    <h2>2020 In-State and Out-of-State Tuition</h2>
+  </header>
+
+  <div id='map'></div>
+
+  <footer>
+    <p>Map authored by Ryan Lark</p>
+    <p>Map depicts the locations of fire stations, school programs, and food stores in Denver, CO. All data was sourced from the Denver Open Data Catalog.
+    </p>
+  </footer>
+  <!-- Is the is the latest version of Leaflet? -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="data/denver-food-stores.js"></script>
+  <script src="data/denver-fire-stations.js"></script>
+  <script src="data/after-school-programs.js"></script>
+
+  <script>
+    var map = L.map('map', {
+      center: [37.8393, -85],
+      zoom: 7.5,
+    });
+
+    var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    var schoolLayer = L.geoJson(programs, {
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng);
+    },
+    filter: function (feature) {
+        if (feature.properties.ORGANIZATI) {
+            return feature;
+        }
+    },
+    style: function (feature) {
+        return {
+            color: '#00FF00',
+            fillColor: '#00FF00',
+            weight: 1,
+            fillOpacity: 1,
+            radius: 10
+        }
+    },
+    onEachFeature : function(feature,layer) {
+	var popup = `<p><b>${feature.properties.ORGANIZATI}</b></p>`;
+layer.bindTooltip(popup);
+}
+}).addTo(map);
+
+map.on('click', function (e) {
+    console.log(e.latlng) 
+    schoolLayer.eachLayer(function (layer) {
+        console.log(layer.getLatLng());
+    });
+});
+
+map.on('click', function (e) {
+    schoolLayer.eachLayer(function (layer) {
+        var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; 
+
+        if (distance > 1) {
+            layer.setStyle({
+                fillOpacity: 0.1
+            });
+        } else {
+            layer.setStyle({
+                fillOpacity: 1
+            });
+        }
+    });
+});
+////////////////////////////////////////;
+var foodLayer = L.geoJson(stores, {
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng);
+    },
+    filter: function (feature) {
+        if (feature.properties['STORE_NAME']) {
+            return feature;
+        }
+    },
+    style: function (feature) {
+        return {
+            color: '#ffa500',
+            fillColor: '#ffa500',
+            weight: 1,
+            fillOpacity: 1,
+            radius: 10
+        }
+    },
+    onEachFeature : function(feature,layer) {
+	var popup = `<p><b>${feature.properties['STORE_NAME']}</b></p>`;
+layer.bindTooltip(popup);
+}
+}).addTo(map);
+
+map.on('click', function (e) {
+    console.log(e.latlng) 
+    foodLayer.eachLayer(function (layer) {
+        console.log(layer.getLatLng()); 
+    });
+});
+
+map.on('click', function (e) {
+    foodLayer.eachLayer(function (layer) {
+        var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; 
+
+        if (distance > 1) {
+            layer.setStyle({
+                fillOpacity: 0.1
+            });
+        } else {
+            layer.setStyle({
+                fillOpacity: 1
+            });
+        }
+    });
+});
+//////////////////////////////////////;
+var fireLayer = L.geoJson(stations, {
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng);
+    },
+    filter: function (feature) {
+        if (feature.properties['STATION_NU']) {
+            return feature;
+        }
+    },
+    style: function (feature) {
+        return {
+            color: '#FF0000',
+            fillColor: '#FF0000',
+            weight: 1,
+            fillOpacity: 1,
+            radius: 10
+        }
+    },
+    onEachFeature : function(feature,layer) {
+	var popup = `<p><b>${feature.properties['STATION_NU']}</b></p>`;
+layer.bindTooltip(popup);
+}
+}).addTo(map);
+
+map.on('click', function (e) {
+    console.log(e.latlng) 
+    fireLayer.eachLayer(function (layer) {
+        console.log(layer.getLatLng()); 
+    });
+});
+
+map.on('click', function (e) {
+    fireLayer.eachLayer(function (layer) {
+        var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; 
+
+        if (distance > 1) {
+            layer.setStyle({
+                fillOpacity: 0.1
+            });
+        } else {
+            layer.setStyle({
+                fillOpacity: 1
+            });
+        }
+    });
+});
+////////////////////////////////////////////////////////////////////////////////////////;
+
+
+var sourcesLayers = {
+ "<b style='color:#ffa500'>Stores</b>": foodLayer,
+ "<b style='color:#FF0000'>Stations</b>": fireLayer,
+ "<b style='color:#00FF00; text-shadow: 0px 0px 1px #333;'>Programs</b>": schoolLayer
+}
+
+L.control.layers(null, sourcesLayers, { collapsed:false }).addTo(map);
+</script>
+
+</body>
+</html>
