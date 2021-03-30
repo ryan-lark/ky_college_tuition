@@ -1,0 +1,8 @@
+{
+    "title": "College Tuition in Kentucky", 
+    "info": "Map depicts all public and private in-person colleges across Kentucky, including their in-state and out-of-state tuition costs
+    for the 2020 school year.",
+    "coordinates": [37.8393, -85],
+    "author": "Ryan Lark",
+    "link": "https://github.com/ryan-lark/ky_college_tuition"
+  }

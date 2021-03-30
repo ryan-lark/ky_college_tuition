@@ -119,7 +119,7 @@
     },
     onEachFeature : function(feature,layer) {{
         var tuition = feature.properties["Tuition_Published In-state Tuition and Fees ($)"];
-        if (tuition !== "null") {
+        if (tuition !== null) {
         var popup = 
     `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
         In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
@@ -155,7 +155,7 @@ var privateLayer = L.geoJson(cost, {
         }
     },
     onEachFeature : function(feature,layer) {
-	if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== "null") {
+	if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== null) {
         var popup = 
     `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
         In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
