@@ -87,11 +87,10 @@
       zoom: 7.49,
     });
 
-    var tiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
+    var tiles = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+	maxZoom: 20,
+	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+}).addTo(map);
 //------------------------------------------------------------------------------------------;
 
     var publicLayer = L.geoJson(cost, {
@@ -99,25 +98,34 @@
         return L.circleMarker(latlng);
     },
     filter: function (feature) {
-        var school = feature.properties["Tuition_Public\/Private"]
-        if (school = "Public") {           
+        var school = feature.properties["Support"]
+        if (school == "Public") {           
             return feature;
         }
     },
     style: function (feature) {
         return {
-            color: '#00FF00',
-            fillColor: '#00FF00',
+            color: '#A9A9A9',
+            fillColor: '#A9A9A9',
             weight: 1,
-            fillOpacity: 1,
-            radius: 10
+            fillOpacity: .6,
+            radius: 8
         }
     },
-    onEachFeature : function(feature,layer) {
-	var popup = `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
+    onEachFeature : function(feature,layer) {{
+        var tuition = feature.properties["Tuition_Published In-state Tuition and Fees ($)"];
+        if (tuition !== "null") {
+        var popup = 
+    `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
         In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
         Out-of-State Tuition: $${feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]}
         </p>`;
+    } else {
+        var popup = 
+        `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
+        Tuition Rate Unknown
+        </p>`;
+    }}
 layer.bindTooltip(popup);
 }
 }).addTo(map);
@@ -127,60 +135,42 @@ var privateLayer = L.geoJson(cost, {
         return L.circleMarker(latlng);
     },
     filter: function (feature) {
-        var school = feature.properties["Tuition_Public\/Private"]
-        if (school = "Private") {
+        var school = feature.properties["Support"]
+        if (school == "Private") {
             return feature;
         }
     },
     style: function (feature) {
         return {
-            color: '#FF0000',
-            fillColor: '#FF0000',
+            color: '#4169E1',
+            fillColor: '#4169E1',
             weight: 1,
-            fillOpacity: 1,
-            radius: 10
+            fillOpacity: .6,
+            radius: 8
         }
     },
     onEachFeature : function(feature,layer) {
-	var popup = `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
+	if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== "null") {
+        var popup = 
+    `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
         In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
         Out-of-State Tuition: $${feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]}
         </p>`;
+    } else {
+        var popup = 
+        `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
+        Tuition Rate Unknown
+        </p>`;
+    }
 layer.bindTooltip(popup);
 }
 }).addTo(map);
 // Added the marker for all schools
 
-map.on('click', function (e) {
-    console.log(e.latlng) 
-    schoolLayer.eachLayer(function (layer) {
-        console.log(layer.getLatLng());
-    });
-});
-
-map.on('click', function (e) {
-    schoolLayer.eachLayer(function (layer) {
-        var distance = e.latlng.distanceTo(layer.getLatLng()) / 1000; 
-
-        if (distance > 1) {
-            layer.setStyle({
-                fillOpacity: 0.1
-            });
-        } else {
-            layer.setStyle({
-                fillOpacity: 1
-            });
-        }
-    });
-});
-
-//--------------------------------------------------------------------------------------------;
-
-
 
 var sourcesLayers = {
- "<b style='color:#ffa500'>Public</b>": publicLayer,
- "<b style='color:#FF0000'>Private</b>": privateLayer,
+ "<b style='color:#A9A9A9'>Public</b>": publicLayer,
+ "<b style='color:#4169E1'>Private</b>": privateLayer,
 }
 
 L.control.layers(null, sourcesLayers, { collapsed:false }).addTo(map);
