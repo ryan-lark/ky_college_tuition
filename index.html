@@ -73,10 +73,16 @@
 
   <footer>
     <p>Map authored by Ryan Lark</p>
-    <p>Map depicts the locations of fire stations, school programs, and food stores in Denver, CO. All data was sourced from the Denver Open Data Catalog.
+    <p><br>Map depicts all public and private in-person colleges across Kentucky, including their in-state and out-of-state tuition costs
+         for the 2020 school year. 
+        <br><br>
+        Data was sourced from KyGovMaps and the National Center for Education Statistics on 3/29/2021.
     </p>
   </footer>
   <!-- Is the is the latest version of Leaflet? -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+  crossorigin="anonymous"></script>
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script src="data/ky_college_tuitions.geojson"></script>
 
@@ -105,8 +111,8 @@
     },
     style: function (feature) {
         return {
-            color: '#A9A9A9',
-            fillColor: '#A9A9A9',
+            color: '#505050',
+            fillColor: '#505050',
             weight: 1,
             fillOpacity: .6,
             radius: 8
@@ -169,11 +175,44 @@ layer.bindTooltip(popup);
 
 
 var sourcesLayers = {
- "<b style='color:#A9A9A9'>Public</b>": publicLayer,
+ "<b style='color:#505050'>Public</b>": publicLayer,
  "<b style='color:#4169E1'>Private</b>": privateLayer,
 }
 
 L.control.layers(null, sourcesLayers, { collapsed:false }).addTo(map);
+
+
+$.when(privateLayer).done(function () {
+    // load, filter, and style the state outline 
+    $.getJSON("data/US_States_updated.geojson", function (data) {
+
+        var stateLayer = L.geoJson(data, {
+          style: function (feature) {
+            return {
+              // Let's experiment with these colors shortly
+              // color: '#222222', // Gray
+              color: '#222', // White
+              // Make line weight larger than the county outline
+              weight: 2,
+              fillOpacity: 0,
+              // This property allows us control interactivty of layer
+              interactive: false
+            };
+          },
+
+          // Filter for the correct state to use
+          filter: function (feature) {
+            if (feature.properties.NAME == "Kentucky") {
+              return feature;
+            }
+          }
+        });
+
+        // Add layer to map!
+        stateLayer.addTo(map)
+
+    });
+});
 </script>
 
 </body>
