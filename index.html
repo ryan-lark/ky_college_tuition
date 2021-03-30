@@ -118,8 +118,7 @@
         }
     },
     onEachFeature : function(feature,layer) {{
-        var tuition = feature.properties["Tuition_Published In-state Tuition and Fees ($)"];
-        if (tuition !== null) {
+      if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== null) {
         var popup = 
     `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
         In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
