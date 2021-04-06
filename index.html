@@ -108,6 +108,7 @@
     var map = L.map('map', {
       center: [37.8393, -85],
       zoom: 7.49,
+      minZoom: 7.3
     });
 
     var tiles = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
@@ -128,8 +129,8 @@
     },
     style: function (feature) {
         return {
-            color: '#505050',
-            fillColor: '#505050',
+            color: '#FF8C00',
+            fillColor: '#FF8C00',
             weight: 1,
             fillOpacity: .6,
             radius: 8
@@ -191,7 +192,7 @@ layer.bindTooltip(popup);
 
 
 var sourcesLayers = {
- "<b style='color:#505050'>Public</b>": publicLayer,
+ "<b style='color:#FF8C00'>Public</b>": publicLayer,
  "<b style='color:#4169E1'>Private</b>": privateLayer,
 }
 
@@ -205,13 +206,9 @@ $.when(privateLayer).done(function () {
         var stateLayer = L.geoJson(data, {
           style: function (feature) {
             return {
-              // Let's experiment with these colors shortly
-              // color: '#222222', // Gray
-              color: '#222', // White
-              // Make line weight larger than the county outline
+              color: '#222',
               weight: 2,
               fillOpacity: 0,
-              // This property allows us control interactivty of layer
               interactive: false
             };
           },
@@ -229,6 +226,7 @@ $.when(privateLayer).done(function () {
 
     });
 });
+
 </script>
 
 </body>
