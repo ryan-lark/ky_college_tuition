@@ -140,8 +140,8 @@
       if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== null) {
         var popup = 
     `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
-        In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
-        Out-of-State Tuition: $${feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]}
+        In-State Tuition: $${Number(feature.properties["Tuition_Published In-state Tuition and Fees ($)"]).toLocaleString()} <br>
+        Out-of-State Tuition: $${Number(feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]).toLocaleString()}
         </p>`;
     } else {
         var popup = 
@@ -176,8 +176,8 @@ var privateLayer = L.geoJson(cost, {
 	if (feature.properties["Tuition_Published In-state Tuition and Fees ($)"] !== null) {
         var popup = 
     `<p><b>${feature.properties["Parent_Ins"]}</b> <br>
-        In-State Tuition: $${feature.properties["Tuition_Published In-state Tuition and Fees ($)"]} <br>
-        Out-of-State Tuition: $${feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]}
+        In-State Tuition: $${Number(feature.properties["Tuition_Published In-state Tuition and Fees ($)"]).toLocaleString()} <br>
+        Out-of-State Tuition: $${Number(feature.properties["Tuition_Published Out-of-state Tuition and Fees ($)"]).toLocaleString()}
         </p>`;
     } else {
         var popup = 
